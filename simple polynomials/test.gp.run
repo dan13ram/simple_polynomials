@@ -1,0 +1,1 @@
+install("init_test","v","init_test","./test.gp.so");

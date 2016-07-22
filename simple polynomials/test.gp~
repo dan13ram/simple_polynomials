@@ -1,0 +1,81 @@
+allocatemem(800000000);
+multmod(N,p,f)={
+        if(N<100, return(Mod(Mod(1,p)*x^N,f)) );
+        k = floor(log(N)/log(2));
+        l = N - 2^k;
+        A = Mod(Mod(1,p)*x^(2^6),f);
+        i = 6;
+        while(i < k, \
+                i = i+1; \
+                A = Mod(A^2,f) \
+                );
+        return(A*multmod(l,p,f))
+        };
+
+
+p = 524309; \\20 bit prime
+d = random(2^9) + 2^9; \\10 bit degree
+
+f = vector(d+1,x,Mod(random(p),p));
+f[1] = 1;
+f = Pol(f);
+\\f= (Mod(1,p)*x + Mod(2,p))^50*(Mod(1,p)*x + Mod(53,p))^60*(Mod(1,p)*x^2+Mod(1,p)*x + Mod(1,p))^50*(Mod(1, 524309)*x^3 + Mod(1, 524309)*x^2 + Mod(524307, 524309)*x + Mod(524308, 524309))^5;
+
+A1 = Mod(multmod(p,p,f)-x,f);
+A2 = Mod(multmod(p^2,p,f)-x,f);
+A3 = Mod(multmod(p^3,p,f)-x,f);
+A4 = Mod(multmod(p^4,p,f)-x,f);
+A5 = Mod(multmod(p^5,p,f)-x,f);
+
+g = centerlift(gcd(A1,f));
+while(g!=1,\
+        c = 0;\
+        while(c==0,\
+                temp = divrem(f,g);\
+                c = temp[2]; \
+                if(c==0,f=temp[1])\
+                );\
+        g = centerlift(gcd(A1,f)); \
+        );
+g = centerlift(gcd(A2,f));
+while(g!=1,\
+        c = 0;\
+        while(c==0,\
+                temp = divrem(f,g);\
+                c = temp[2]; \
+                if(c==0,f=temp[1])\
+                );\
+        g = centerlift(gcd(A2,f)); \
+        );
+g = centerlift(gcd(A3,f));
+while(g!=1,\
+        c = 0;\
+        while(c==0,\
+                temp = divrem(f,g);\
+                c = temp[2]; \
+                if(c==0,f=temp[1])\
+                );\
+        g = centerlift(gcd(A3,f)); \
+        );
+g = centerlift(gcd(A4,f));
+while(g!=1,\
+        c = 0;\
+        while(c==0,\
+                temp = divrem(f,g);\
+                c = temp[2]; \
+                if(c==0,f=temp[1])\
+                );\
+        g = centerlift(gcd(A3,f)); \
+        );
+g = centerlift(gcd(A5,f));
+while(g!=1,\
+        c = 0;\
+        while(c==0,\
+                temp = divrem(f,g);\
+                c = temp[2]; \
+                if(c==0,f=temp[1])\
+                );\
+        g = centerlift(gcd(A3,f)); \
+        );
+if(Mod(f,1)==0,print("5-smooth"),print("not 5-smooth"));
+
